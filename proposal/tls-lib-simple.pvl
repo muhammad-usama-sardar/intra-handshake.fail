@@ -631,11 +631,26 @@ query ev:bitstring,kch1:ae_key,kch2:ae_key;
 Goal G3: w.r.t. client_write_key (kc) for application data derived from client_application_traffic_secret_0 (atsc) 
 Rationale: It has transcript hash up to log_SF (vs. log_SH in above property).
 Result: false
+Counterexample: Adversary forces BadElement injection in unvalidated DH parameters.
 *)
 query ev:bitstring,kc1:ae_key,kc2:ae_key;
       event(ClientStateEvKc(ev,kc1)) &&
       event(ServerStateEvKc(ev,kc2)) ==>
       (kc1 = kc2)
+.
+
+(* 
+Goal G3 Mitigation
+Rationale: Client rejects BadElement in unvalidated DH parameters 
+per RFC8446 section-4.2.8.1
+      "Peers MUST validate each other's public key Y by ensuring that 1 < Y
+      < p-1.  This check ensures that the remote peer is properly behaved
+      and isn't forcing the local system into a small subgroup." *)
+query ID:identity,ev:bitstring,kc1:ae_key,kc2:ae_key;
+    event(ClientStateEvKc(ev,kc1)) &&
+    event(ServerStateEvKc(ev,kc2)) ==> (kc1 = kc2)
+    || event(ClientID(ID, e2b(BadElement)))
+    (* Result: true *)
 .
 
 (********************************************************)
