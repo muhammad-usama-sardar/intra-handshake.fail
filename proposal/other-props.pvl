@@ -50,7 +50,9 @@ query cr:random, sr:random, cr':random, sr':random,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
   attacker(new privAK) &&
-  event(ClientFinished(pk(new privAK),psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
+  event(ClientFinishedWithID(ID,pubLTK,pk(new privAK),psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
+  (* ClientFinished does not have param for pubAK in the models *)
+  (* event(ClientFinished(pubEK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) *) 
   event(LeakedAK(pk(new privAK)))
 .
 
@@ -60,8 +62,7 @@ Formalization:
   Need for "&& ClientFinished": It binds the attacker knows the specific key that the client 
   has accepted and is going to use in communication. This excludes other time points in the
   protocol when the handshake has not yet completed. 
-Result: should be false 
-  Fixed in next query
+Result: true
 *)
 query cr:random, sr:random, cr':random, sr':random,
       ID:identity,pubLTK:pubkey,pubAK:pubkey,pubEK:pubkey,
@@ -69,7 +70,7 @@ query cr:random, sr:random, cr':random, sr':random,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
       attacker(kc) &&
-      event(ClientFinished(pubAK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
+      event(ClientFinished(pubEK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
       event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
       event(SentBadElement) ||
@@ -85,7 +86,7 @@ query cr:random, sr:random, cr':random, sr':random,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
       attacker(kc) &&
-      event(ClientFinished(pubAK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
+      event(ClientFinished(pubEK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
       event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
       event(SentBadElement) ||
@@ -498,7 +499,7 @@ query cr:random, sr:random, cr':random, sr':random,
       psk:preSharedKey, p:pubkey, e:element,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
-      inj-event(ClientFinRecent1WayAgr(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,rms,cr,sr)) ==>
+      inj-event(ClientFinishedWithID(ID_S,pubLTK,pubAK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
       inj-event(PreServerFinRecent1WayAgr(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,cr,sr)) ||
       event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
@@ -603,18 +604,15 @@ query cr:random, sr:random, cr':random, sr':random,
 G-CA1: 
 Goal: If privEK is leaked and privAK is not leaked, 
             can the Client be sure that it connects with the right Server?
-Method: follows directly from SA because even excluding LeakedEK(pubEK), it does not hold. 
-        So here, when we do allow EK to leak, it cannot hold.
 Formalization: Remove leakage of privEK from G-TLS2d: Recent One-way injective agreement
-Result: false
-Interpretation of result: Protocol does not provide compound authentication
-*)
+Result: true
+Interpretation of result: Protocol provides compound authentication *)
 query cr:random, sr:random, cr':random, sr':random,
       ID_S:identity,pubLTK:pubkey,pubAK:pubkey,pubEK:pubkey,
       psk:preSharedKey, p:pubkey, e:element,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
-      inj-event(ClientFinRecent1WayAgr(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,rms,cr,sr)) ==>
+      inj-event(ClientFinishedWithID(ID_S,pubLTK,pubAK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
       inj-event(PreServerFinRecent1WayAgr(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,cr,sr)) ||
       event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
@@ -627,17 +625,15 @@ query cr:random, sr:random, cr':random, sr':random,
 (* 
 Property: If privEK is leaked and privAK is not leaked, 
             can the Client be sure that it connects with the right Server?
-Method: follows directly from SA because even excluding LeakedEK(pubEK), it does not hold. 
-        So here, when we do allow EK to leak, it cannot hold.
-Result: should be false 
-Interpretation of result: Protocol does not provide compound authentication *)
+Result: true
+Interpretation of result: Protocol provides compound authentication *)
 query cr:random, sr:random, cr':random, sr':random,
       ID:identity,pubLTK:pubkey,pubAK:pubkey,pubEK:pubkey,
       psk:preSharedKey, p:pubkey, e:element,
       offer:params, mode:params,
       kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
-      inj-event(ClientFinished(pubAK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
-      inj-event(PreServerFinished(pubAK,psk,cr,sr,offer,mode,kc,ks,ems)) ||
+      inj-event(ClientFinished(pubEK,psk,cr,sr,offer,mode,kc,ks,ems,rms)) ==>
+      inj-event(PreServerFinished(pubEK,psk,cr,sr,offer,mode,kc,ks,ems)) ||
       event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
       event(SentBadElement) ||
@@ -690,4 +686,18 @@ query pubEK:pubkey,dev_state:bitstring,quote:bitstring,
       (* event(SentBadElement) || *)
       event(LeakedAK(pubAK)) ||
       event(LeakedEK(pubEK))
+.
+
+query pubEK:pubkey,dev_state:bitstring,quote:bitstring,
+      cr:random, sr:random, cr':random, sr':random,
+      ID:identity,pubLTK:pubkey,pubAK:pubkey,
+      psk:preSharedKey, e:element,
+      offer:params, mode:params, ID_S:identity,
+      kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
+      inj-event(ClientComp(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,rms,cr,sr,pubEK,dev_state)) ==>
+      inj-event(PreServerComp(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,cr,sr,pubEK,dev_state)) ||
+      event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
+      event(ServerChoosesHash(cr',sr',WeakHash)) ||
+      (* event(SentBadElement) || *)
+      event(LeakedAK(pubAK))
 .
