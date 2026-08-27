@@ -687,17 +687,3 @@ query pubEK:pubkey,dev_state:bitstring,quote:bitstring,
       event(LeakedAK(pubAK)) ||
       event(LeakedEK(pubEK))
 .
-
-query pubEK:pubkey,dev_state:bitstring,quote:bitstring,
-      cr:random, sr:random, cr':random, sr':random,
-      ID:identity,pubLTK:pubkey,pubAK:pubkey,
-      psk:preSharedKey, e:element,
-      offer:params, mode:params, ID_S:identity,
-      kc:ae_key,ks:ae_key,ems:bitstring,rms:bitstring;
-      inj-event(ClientComp(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,rms,cr,sr,pubEK,dev_state)) ==>
-      inj-event(PreServerComp(ID_S,pubLTK,psk,offer,mode,kc,ks,ems,cr,sr,pubEK,dev_state)) ||
-      event(ServerChoosesKEX(cr,sr,DHE_13(WeakDH,e))) ||
-      event(ServerChoosesHash(cr',sr',WeakHash)) ||
-      (* event(SentBadElement) || *)
-      event(LeakedAK(pubAK))
-.
