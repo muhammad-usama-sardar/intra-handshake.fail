@@ -556,6 +556,69 @@ If you are around on any of the following venues of upcoming talks (in reverse c
 | [CCC Attestation SIG](https://github.com/CCC-Attestation) | Virtual | 16 Dec, 2025 | - | [slides](https://github.com/CCC-Attestation/meetings/blob/main/materials/MuhammadUsamaSardar_Binding_Properties_20251216.pdf); [video](https://youtu.be/w_MrjMeHyP8?list=PLmfkUJc39uMhZsNGmpx-qD-uCoQyMglIp&t=593) |
 | [CCC Attestation SIG](https://github.com/CCC-Attestation) | Virtual | 2 Dec, 2025 | - | [slides](https://github.com/muhammad-usama-sardar/CCC-Att-meetings/blob/main/materials/MuhammadUsamaSardar_Open_Questions_20251202.pdf); [video](https://youtu.be/16aGZ-oZidg?list=PLmfkUJc39uMhZsNGmpx-qD-uCoQyMglIp&t=2920) |
 
+## FAQs
+
+This FAQ is only for informational purposes. A follow-up paper under submission more formally answers these questions.
+
+### For binders that contain `pubEK` (binder4, binder6, and binder7)
+**FAQ1**. Is "leakage" of `privEK` necessary for attacks for binder4, binder6, and binder7?
+
+**Answer**. No, the leakage per se is not necessary. Please see section 7.1.4 in paper, stating: 
+> The core problem is that if the privEK is accessible
+to anyone other than an AI agent, it invalidates such a binding. For instance,
+such a binding is trivially invalid if privEK is provisioned at runtime, since the
+privEK owner can produce such a binding even without a TEE. Even when the
+privEK owner remains honest, a vulnerability in the provisioning protocol may
+be exploited. Moreover, privEK may be extracted on a different machine than
+the desired one. Finally, privEK may be leaked due to vulnerabilities in the TEE.
+
+---
+
+**FAQ2**. Why is leakage of keys assumed in the threat model?
+
+**Answer**. This is a standard assumption for formal analysis. There is no perfect system and keys may potentially be leaked. In particular, please note that the machine where the key is leaked is not necessarily your desired machine. Leakage of a single `privEK` anywhere in the world is sufficient for binders that contain `pubEK`. Sec. 6.1 states:
+
+> For RA, we assume that private keys of some machines
+can be leaked by vulnerabilities within the TEE, such as traditional side chan-
+nels, transient execution, and implementation errors [34]. The rationale for this
+assumption is that TEEs typically do not protect against such attacks, as re-
+cently demonstrated by BadRAM [26] (CVSS score of 5.3), Fabricked [57] (CVSS
+score of 5.9), wiretap.fail [58], and TEE.fail [15].
+
+For more details, please see Sec. 4.2.1 of [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS).
+
+Also, attack in Fig. 5(a) -- for example -- does not require any key leakage at all.
+
+---
+
+**FAQ3**. Side channels are out of scope of TEEs. Why is it assumed?
+
+**Answer**. Ironically, out of scope is actually helps these attacks. Side channels set as out of scope by TEE vendors is exactly the reason they can be exploited by breaking a machine in the basement. For more details, please see Sec. 8.1 of [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS).
+
+---
+
+**FAQ4**. Fine, but the verifier will distinguish the basement machine from the desired machine?
+
+**Answer**. To the best of our knowledge, no public cloud provider implementing confidential computing at the time of writing provides a list of legitimate machines that it owns. A basement machine is thus indistinguishable from the desired machine. Please see [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS) and [Edgeless Systems GHSA](https://github.com/edgelesssys/contrast/security/advisories/GHSA-hjgc-jc5v-fw7h).
+
+---
+
+### General
+
+**FAQ5**. Why are there no assumptions with the properties?
+
+**Answer**. The correlation properties are meant to evaluate the *binding strength*. Correlation properties do not need any assumptions. Assumptions actually weaken the correlation properties. A property that can be proven without assumptions is stronger than the one with assumptions. Please see Sec. 6.3 of paper and [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
+
+---
+
+**FAQ6**. Why are `WeakDH`, `WeakHash`, and `BadElement` considered in relation to RFC9846 for TLS 1.3? 
+
+**Answer**. This is a standard assumption for formal analysis. As Sec. 6.1 says:
+
+> For TLS, we assume a threat model similar to Bhargavan et al. [8].
+
+Formal analysis under ideal conditions is of pretty little value. One has to understand that the goal here is to evaluate the *binding strength*.
+
 ## Feedback/Comments/Critique/Contributions
 We would love to have your contributions and feedback (especially critique! yes, this is how the science progresses, but please be genuine!). Contact Muhammad Usama Sardar by [email](https://tu-dresden.de/ing/informatik/sya/se/die-professur/beschaeftigte/muhammad-usama-sardar), submit a **minimal** PR, or open an issue. For your contribution to be dealt promptly, please consider the following remarks:
 
