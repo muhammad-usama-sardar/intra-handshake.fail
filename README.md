@@ -558,12 +558,12 @@ If you are around on any of the following venues of upcoming talks (in reverse c
 
 ## FAQs
 
-This FAQ is only for informational purposes. A follow-up paper under submission more formally answers these questions.
+This FAQ is only for informational purposes to address several requests (#8). A follow-up paper under submission more formally answers these questions.
 
 ### For binders that contain `pubEK` (binder4, binder6, and binder7)
 **FAQ1**. Is "leakage" of `privEK` necessary for attacks for binder4, binder6, and binder7?
 
-**Answer**. No, the leakage per se is not necessary. Please see section 7.1.4 in paper, stating: 
+**Answer**. No, the leakage per se is not necessary. Please see section 7.1.4 in [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS), stating: 
 > The core problem is that if the privEK is accessible
 to anyone other than an AI agent, it invalidates such a binding. For instance,
 such a binding is trivially invalid if privEK is provisioned at runtime, since the
@@ -576,24 +576,24 @@ the desired one. Finally, privEK may be leaked due to vulnerabilities in the TEE
 
 **FAQ2**. Why is leakage of keys assumed in the threat model?
 
-**Answer**. This is a standard assumption for formal analysis. There is no perfect system and keys may potentially be leaked. In particular, please note that the machine where the key is leaked is not necessarily your desired machine. Leakage of a single `privEK` anywhere in the world is sufficient for binders that contain `pubEK`. Sec. 6.1 states:
+**Answer**. This is a standard assumption for formal analysis. There is no perfect system and keys may potentially be leaked. In particular, please note that the machine where the key is leaked is not necessarily your desired machine. Leakage of a single `privEK` anywhere in the world is sufficient for binders that contain `pubEK`. Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) states:
 
 > For RA, we assume that private keys of some machines
-can be leaked by vulnerabilities within the TEE, such as traditional side chan-
-nels, transient execution, and implementation errors [34]. The rationale for this
-assumption is that TEEs typically do not protect against such attacks, as re-
-cently demonstrated by BadRAM [26] (CVSS score of 5.3), Fabricked [57] (CVSS
+can be leaked by vulnerabilities within the TEE, such as traditional side channels,
+transient execution, and implementation errors [34]. The rationale for this
+assumption is that TEEs typically do not protect against such attacks, as recently
+demonstrated by BadRAM [26] (CVSS score of 5.3), Fabricked [57] (CVSS
 score of 5.9), wiretap.fail [58], and TEE.fail [15].
 
 For more details, please see Sec. 4.2.1 of [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS).
 
-Also, attack in Fig. 5(a) -- for example -- does not require any key leakage at all.
+Also, attack in Fig. 5(a) of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) -- for example -- does not require any key leakage at all.
 
 ---
 
 **FAQ3**. Side channels are out of scope of TEEs. Why is it assumed?
 
-**Answer**. Ironically, out of scope is actually helps these attacks. Side channels set as out of scope by TEE vendors is exactly the reason they can be exploited by breaking a machine in the basement. For more details, please see Sec. 8.1 of [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS).
+**Answer**. Ironically, out of scope actually helps these attacks. Side channels set as out of scope by TEE vendors is exactly the reason they can be exploited by breaking a machine in the basement. For more details, please see Sec. 8.1 of [ID-Crisis](https://www.researchgate.net/publication/398839141_Identity_Crisis_in_Confidential_Computing_Formal_Analysis_of_Attested_TLS).
 
 ---
 
@@ -605,19 +605,32 @@ Also, attack in Fig. 5(a) -- for example -- does not require any key leakage at 
 
 ### General
 
-**FAQ5**. Why are there no assumptions with the properties?
+**FAQ5**. Why are there no assumptions with the properties in the paper?
 
-**Answer**. The correlation properties are meant to evaluate the *binding strength*. Correlation properties do not need any assumptions. Assumptions actually weaken the correlation properties. A property that can be proven without assumptions is stronger than the one with assumptions. Please see Sec. 6.3 of paper and [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
+**Answer**. The correlation properties are meant to evaluate the *binding strength*. Correlation properties do not need any assumptions. Assumptions actually weaken the correlation properties. A property that can be proven without assumptions is stronger than the one with assumptions. Please see Sec. 6.3 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) and [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
 
 ---
 
 **FAQ6**. Why are `WeakDH`, `WeakHash`, and `BadElement` considered in relation to RFC9846 for TLS 1.3? 
 
-**Answer**. This is a standard assumption for formal analysis. As Sec. 6.1 says:
+**Answer**. This is a standard assumption for formal analysis. As Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) says:
 
 > For TLS, we assume a threat model similar to Bhargavan et al. [8].
 
-Formal analysis under ideal conditions is of pretty little value. One has to understand that the goal here is to evaluate the *binding strength*.
+Formal analysis under ideal conditions is of pretty little value. One has to understand that the goal here is to evaluate the *binding strength*. Please see [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
+
+---
+
+**FAQ7**. Under what conditions does the proposed mitigation work?
+
+**Answer**. Sec. 7.2 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) states:
+
+> Including both pubEK and the key derived from `hs` ensures that the adversary
+would need to have both to get the Evidence accepted by the client. Hence, the
+protocol does not fail as long as one of `privEK` or `hs` is secret.
+
+The mitigation does not work when both `privEK` and `hs` are leaked.
+The conditions were not formally analyzed in this work. They are analyzed in follow-up paper.
 
 ## Feedback/Comments/Critique/Contributions
 We would love to have your contributions and feedback (especially critique! yes, this is how the science progresses, but please be genuine!). Contact Muhammad Usama Sardar by [email](https://tu-dresden.de/ing/informatik/sya/se/die-professur/beschaeftigte/muhammad-usama-sardar), submit a **minimal** PR, or open an issue. For your contribution to be dealt promptly, please consider the following remarks:
