@@ -341,7 +341,8 @@ intra-handshake.fail/
       ├── tls-lib-simple.pvl         # ProVerif library file for correlation properties
       ├── other-props.pvl            # (Optional) ProVerif library file for other properties
       ├── tls13-multiagent.pv        # ProVerif main file
-      └── log.txt                    # log of ProVerif execution
+      ├── log.txt                    # log of ProVerif execution
+      └── log-optional.txt           # log of ProVerif execution for optional properties
 ```
 
 
@@ -519,7 +520,8 @@ If you are around on any of the following venues of upcoming talks (in reverse c
 | [GA4GH 14th Plenary Meeting](https://www.ga4gh.org/event/14th-plenary/) | Singapore (Virtual) | 28 Sept-2 Oct, 2026 | - | slides, video |
 | [ESORICS 2026](https://sites.google.com/di.uniroma1.it/esorics2026/) | Rome, Italy | 14-18 Sept, 2026 | Sponsors are invited | slides |
 | IETF [RATS Interim meeting](https://datatracker.ietf.org/meeting/interim-2026-rats-03/session/rats) | Virtual | 14 Sept, 2026 | - | slides, video |
-| [RIOT Summit 2026](https://summit.riot-os.org/2026/) | Grenoble, France (Virtual) | 2-4 September, 2026 | - | [abstract](https://summit.riot-os.org/2026/blog/speakers/muhammad-usama-sardar/), slides, video |
+| Hackathon @ [RIOT Summit 2026](https://summit.riot-os.org/2026/) | Grenoble, France (Virtual) | 4 September, 2026| - | [topic synopsis](https://notes.inria.fr/2ppogr2fTSKusRog3RXbPQ?view#topic-security-analysis-of-attested-tls-and-attested-edhoc) |
+| [RIOT Summit 2026](https://summit.riot-os.org/2026/) | Grenoble, France (Virtual) | 2-4 September, 2026 | - | [abstract](https://summit.riot-os.org/2026/blog/speakers/muhammad-usama-sardar/), [slides](https://www.researchgate.net/publication/413988306_Security_Analysis_of_Attested_TLS_and_Attested_EDHOC), video |
 | [Data Security Work Stream (DSWS)](https://www.ga4gh.org/work_stream/data-security/) at the [Global Alliance for Genomics and Health (GA4GH)](https://www.ga4gh.org/) | Virtual | 24 Aug, 2026 | - | [slides](https://www.researchgate.net/publication/413569575_High-Severity_Vulnerabilities_in_Former_GIF_Design_for_Attested_TLS_draft-fossati-seat-early-attestation), [video](https://us02web.zoom.us/rec/share/UAn381deia-aMNmjGHhMqxocc1HcyF7ksLlaeeKefxO4bSC2mHPzwPQPYGe2dnZR.zfleYCmmtiteo_NS) |
 | Confidential AI Public Side Meeting @ [IETF 126](https://www.ietf.org/meeting/126/) | Vienna, Austria | 21 July, 2026 | ULISSY s.r.l. | [plan](https://mailarchive.ietf.org/arch/msg/126attendees/odgd_xmhjQXiR_aLYdqtVvDJeF4/), [slides](https://www.researchgate.net/publication/410954219_Proposed_RG_Confidential_Computing_for_Agentic_AI), video |
 | SEAT @ [IETF 126](https://www.ietf.org/meeting/126/) | Vienna, Austria | 21 July, 2026 | ULISSY s.r.l. | [slides](https://datatracker.ietf.org/meeting/126/materials/slides-126-seat-binding-properties-of-expat-00.pdf), [video](https://youtu.be/Fb5Hzh1mp1E?t=4189) |
@@ -555,4 +557,26 @@ If you are around on any of the following venues of upcoming talks (in reverse c
 | [CCC Attestation SIG](https://github.com/CCC-Attestation) | Virtual | 2 Dec, 2025 | - | [slides](https://github.com/muhammad-usama-sardar/CCC-Att-meetings/blob/main/materials/MuhammadUsamaSardar_Open_Questions_20251202.pdf); [video](https://youtu.be/16aGZ-oZidg?list=PLmfkUJc39uMhZsNGmpx-qD-uCoQyMglIp&t=2920) |
 
 ## Feedback/Comments/Critique/Contributions
-We would love to have your contributions and feedback (especially critique! yes, this is how the science progresses, but please be genuine!). Contact Muhammad Usama Sardar on CCC Slack Workspace, by [email](https://tu-dresden.de/ing/informatik/sya/se/die-professur/beschaeftigte/muhammad-usama-sardar), submit a minimal PR, or open an issue. 
+We would love to have your contributions and feedback (especially critique! yes, this is how the science progresses, but please be genuine!). Contact Muhammad Usama Sardar by [email](https://tu-dresden.de/ing/informatik/sya/se/die-professur/beschaeftigte/muhammad-usama-sardar), submit a **minimal** PR, or open an issue. For your contribution to be dealt promptly, please consider the following remarks:
+
+**Remark 1**. This is an official repo of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS). Not everything about attested TLS (and even intra-handshake attestation) needs to be put into this repo. The paper has a specific scope, and everything out of scope has to be dealt with outside of this repo. If you are unsure, please drop an email to discuss.
+
+**Remark 2**. This paper is based on the work that concluded around December 2025. Please see [vulnerability disclosure report](https://mailarchive.ietf.org/arch/msg/seat/x3eQxFjQFJLceae6l4_NgXnmsDY/) to the IETF on 11 Jan, 2026 as evidence. A huge amount of follow-up work has been done in the past months. Some of that is under submission; some of that is in progress for submission. If the contents of your PR are already answered by those papers, it will not be merged in this repo. As all of our previous work is available under the Apache-2.0 License, we remain fully committed to making the artifacts from those papers open source under the same license for reproducibility, extensibility, and further research.
+
+**Remark 3**. ESORICS has a strict page limit. A total of 20 pages are allowed. A single word over that is desk rejected (including Appendix; it happened with us before). We could put only a limited number of things in 20 pages, while keeping it still readable. Please explain clearly and precisely how your question and/or concern relates to the paper.
+
+**Remark 4**. If your proposed code changes the formal model, threat model, and properties, it has to be supported with strong evidence. The reviewers have reviewed a specific formal model, threat model, and properties. Changing those settings is not fair.
+
+**Remark 5**. Huge PRs are very unlikely to be merged. Multiple small, precise, concise and to-the-point PRs are much appreciated and more likely to find their way to be merged.
+
+**Remark 6**. Please indicate any usage of AI-assistance upfront. 
+
+**Remark 7**. The acknowledgment list for this repo is locked as the camera-ready version for ESORICS has been submitted. Any further contributions or discussions that the authors find insightful and helpful would be acknowledged in the [draft](https://datatracker.ietf.org/doc/draft-intra-handshake-fail/).
+
+**Remark 8**. Please be aware that we are currently dealing with several critical (up to 9.8 CVSS) CVEs in intra-handshake attestation. Please keep your contributions focused on the most urgent items. If you do not respond to our questions, your PR will not be merged.
+
+**Remark 9**. If possible, please review the [extensive discussion in IETF/IRTF](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) and the threads before submitting an issue. If you raise an issue that has been discussed there, we can only refer you back to those discussions.
+
+**Remark 10**. Disputes are welcome. Please first quote the statement from the paper that you dispute. Then present your rationale of why you believe the statement is wrong. Please be as precise and concise as possible.
+
+**Remark 11**. Remote attestation is a very heated topic. Please be respectful.
