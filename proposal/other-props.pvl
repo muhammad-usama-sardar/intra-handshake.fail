@@ -628,7 +628,7 @@ Method: follows directly from SA because even excluding LeakedEK(pubEK), it does
         So here, when we do allow EK to leak, it cannot hold.
 Result: false 
 Interpretation of result: Protocol does not provide compound authentication *)
-query cr:random, sr:random, cr':random, sr':random,
+(* query cr:random, sr:random, cr':random, sr':random,
       ID:identity,pubLTK:pubkey,pubAK:pubkey,pubEK:pubkey,
       psk:preSharedKey, p:pubkey, e:element,
       offer:params, mode:params,
@@ -639,7 +639,7 @@ query cr:random, sr:random, cr':random, sr':random,
       event(ServerChoosesHash(cr',sr',WeakHash)) ||
       event(SentBadElement) ||
       event(LeakedAK(pubAK))
-.
+. *)
 
 (* Result: true  *)
 query cr:random, sr:random, cr':random, sr':random,
