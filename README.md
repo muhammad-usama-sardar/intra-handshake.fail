@@ -516,6 +516,7 @@ If you are around on any of the following venues of upcoming talks (in reverse c
 
 | Event/Host | Venue | Date(s) | Funding | Material |
 | --- | --- | --- | --- | --- |
+| BoF @ [Linux Plumbers Conference 2026](https://lpc.events/event/20/) | Prague, Czechia | 5-7 Oct, 2026 | Sponsors are invited | [abstract](https://lpc.events/event/20/abstracts/3122/), slides, video |
 | [Linux Plumbers Conference 2026](https://lpc.events/event/20/) | Prague, Czechia | 5-7 Oct, 2026 | Sponsors are invited | [abstract](https://lpc.events/event/20/contributions/2585/), slides, video |
 | [GA4GH 14th Plenary Meeting](https://www.ga4gh.org/event/14th-plenary/) | Singapore (Virtual) | 28 Sept-2 Oct, 2026 | - | slides, video |
 | [ESORICS 2026](https://sites.google.com/di.uniroma1.it/esorics2026/) | Rome, Italy | 14-18 Sept, 2026 | Sponsors are invited | slides |
@@ -576,7 +577,7 @@ the desired one. Finally, privEK may be leaked due to vulnerabilities in the TEE
 
 **FAQ2**. Why is leakage of keys assumed in the threat model?
 
-**Answer**. This is a standard assumption for formal analysis. There is no perfect system and keys may potentially be leaked. In particular, please note that the machine where the key is leaked is not necessarily your desired machine. Leakage of a single `privEK` anywhere in the world is sufficient for binders that contain `pubEK`. Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) states:
+**Answer**. This is a standard assumption for formal analysis; for example, see the [formal analysis of TLS 1.3](https://doi.org/10.1109/SP.2017.26). It is typical in formal analysis to analyze the consequences due to leakage of keys. There is no perfect system and keys may potentially be leaked. In particular, please note that the machine where the key is leaked is **not necessarily** the client's desired machine. Leakage of a single `privEK` **anywhere in the world** is sufficient for binders that contain `pubEK`. Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) states:
 
 > For RA, we assume that private keys of some machines
 can be leaked by vulnerabilities within the TEE, such as traditional side channels,
@@ -607,17 +608,18 @@ Also, attack in Fig. 5(a) of [Intra-handshake.fail paper](https://www.researchga
 
 **FAQ5**. Why are there no assumptions with the properties in the paper?
 
-**Answer**. The correlation properties are meant to evaluate the *binding strength*. Correlation properties do not need any assumptions. Assumptions actually weaken the correlation properties. A property that can be proven without assumptions is stronger than the one with assumptions. Please see Sec. 6.3 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) and [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
+**Answer**. Please note that a property that can be proven without assumptions is stronger than the one with assumptions. As a result, assumptions actually weaken the correlation properties. 
+In fact, the correlation properties are meant to evaluate the *binding strength*. Therefore, correlation properties do not need any assumptions as a baseline. Table 4 in the [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) shows an evidence that some protocols can satisfy some properties under the same baseline without any additional assumptions. For further details, please see Sec. 6.3 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) and [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2).
 
 ---
 
 **FAQ6**. Why are `WeakDH`, `WeakHash`, and `BadElement` considered in relation to RFC9846 for TLS 1.3? 
 
-**Answer**. This is a standard assumption for formal analysis. As Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) says:
+**Answer**. This is a standard assumption for formal analysis of TLS 1.3. As Sec. 6.1 of [Intra-handshake.fail paper](https://www.researchgate.net/publication/408219182_Intra-handshakefail_CVE-2026-33697_High-severity_CVE_in_Attested_TLS) says:
 
-> For TLS, we assume a threat model similar to Bhargavan et al. [8].
+> For TLS, we assume a threat model similar to [Bhargavan et al.](https://doi.org/10.1109/SP.2017.26) [8].
 
-Formal analysis under ideal conditions is of pretty little value. One has to understand that the goal here is to evaluate the *binding strength*. Please see [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
+One has to understand that the goal here is to evaluate the *binding strength*. Please see [IETF/IRTF discussions](https://www.ietf.org/archive/id/draft-intra-handshake-fail-21.html#section-16.2) for further details.
 
 ---
 
